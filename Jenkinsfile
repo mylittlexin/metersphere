@@ -24,10 +24,8 @@ pipeline {
         }
         stage('Docker build & push') {
             steps {
-                sh "docker build --build-arg MS_VERSION=${BRANCH_NAME}-b${BUILD_NUMBER} -t ${IMAGE_NAME}:${BRANCH_NAME} ."
-            }
-            steps {
                 withCredentials([usernamePassword(credentialsId: '${IMAGE_REGISTRY_CRED}', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                    sh "docker build --build-arg MS_VERSION=${BRANCH_NAME}-b${BUILD_NUMBER} -t ${IMAGE_NAME}:${BRANCH_NAME} ."
                     sh "docker login -u $user -p $pass ${IMAGE_REGISTRY}"
                     sh "docker tag ${IMAGE_NAME}:${BRANCH_NAME} ${IMAGE_REGISTRY}/${IMAGE_NAME}:${BRANCH_NAME}"
                     sh "docker push ${IMAGE_FREFIX}/${IMAGE_NAME}:${BRANCH_NAME}"
